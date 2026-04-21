@@ -1,0 +1,26 @@
+<header class="navbar">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M4 18L12 6l8 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 18h10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <span class="brand-name">PayrollPro</span>
+      <span class="brand-tag">HR Console</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <span class="role-badge">HR</span>
+    <div class="profile">
+      <div class="avatar">{{ initials }}</div>
+      <div class="profile-info">
+        <span class="profile-name">{{ name }}</span>
+        <span class="profile-email">{{ email }}</span>
+      </div>
+    </div>
+    <button class="logout-btn" (click)="logout()">Sign out</button>
+  </div>
+</header>

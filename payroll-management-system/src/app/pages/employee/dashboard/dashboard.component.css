@@ -1,0 +1,70 @@
+.dashboard { padding: 24px; width: 100%; max-width: 100%; box-sizing: border-box; }
+.welcome-banner {
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, #3b0f7a 0%, #5b21b6 100%);
+  border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; color: #fff;
+}
+.welcome-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.welcome-text h1 { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+.welcome-text p  { font-size: 13px; opacity: 0.8; margin: 0; }
+
+.state-msg { padding: 2rem; text-align: center; color: var(--muted); font-size: 14px; }
+.state-msg.error { color: var(--red); }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.metric-card { background: var(--bg-card2); border-radius: var(--radius); padding: 16px; }
+.metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+.metric-value { font-size: 20px; font-weight: 700; color: var(--text); }
+.metric-value.green { color: var(--green); }
+.metric-value.red   { color: var(--red); }
+.metric-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.no-salary-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 40px; text-align: center; margin-bottom: 20px;
+}
+.no-sal-icon {
+  width: 52px; height: 52px; background: var(--bg-card2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; color: var(--muted); margin: 0 auto 14px;
+}
+.no-sal-title { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 6px; }
+.no-sal-sub   { font-size: 13px; color: var(--muted); margin: 0; }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.card-title  { font-size: 14px; font-weight: 600; color: var(--text); }
+.card-action { font-size: 13px; color: var(--accent); text-decoration: none; }
+.card-action:hover { text-decoration: underline; }
+.breakdown-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 16px 20px; gap: 24px; }
+@media (max-width: 500px) { .breakdown-body { grid-template-columns: 1fr; } }
+.breakdown-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; }
+.breakdown-item  { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.green { color: var(--green); font-weight: 500; }
+.red   { color: var(--red); font-weight: 500; }
+.net-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; background: var(--bg-card2); border-top: 2px solid var(--border);
+  font-size: 14px; font-weight: 600; color: var(--text);
+}
+.net-val { font-size: 18px; color: var(--green); }
+
+.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.quick-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text);
+  transition: all 0.15s;
+}
+.quick-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+.qc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.qc-icon svg { width: 20px; height: 20px; }
+.qc-icon.payslip { background: #faf5ff; color: #7c3aed; }
+.qc-icon.profile { background: #eff6ff; color: #2563eb; }
+.qc-title { font-size: 13px; font-weight: 600; }
+.qc-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.qc-arrow { margin-left: auto; color: var(--muted); }

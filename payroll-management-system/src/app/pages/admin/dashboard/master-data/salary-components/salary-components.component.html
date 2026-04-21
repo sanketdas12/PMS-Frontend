@@ -1,0 +1,98 @@
+<div class="sc-container">
+
+  <!-- Header -->
+  <div class="sc-header">
+    <h2>Salary Components</h2>
+    <button class="btn-primary" (click)="openAddForm()">+ Add Component</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    Loading...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Table -->
+  <table *ngIf="!isLoading" class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th class="actions">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of salaryComponents">
+        <td>{{ item.name }}</td>
+        <td>{{ item.type }}</td>
+        <td>
+          <span [class]="item.isActive ? 'badge-active' : 'badge-inactive'">
+            {{ item.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="btn-edit" (click)="onEdit(item.id!)">Edit</button>
+          <button class="btn-delete" (click)="onDelete(item.id!)">Delete</button>
+        </td>
+      </tr>
+
+      <!-- Empty state -->
+      <tr *ngIf="salaryComponents.length === 0">
+        <td colspan="4" class="empty-state">No data found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div *ngIf="showForm" class="modal-overlay">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Edit Component' : 'Add Component' }}</h3>
+        <button class="btn-close" (click)="closeForm()">×</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- Name -->
+        <div class="form-group">
+          <label>Name</label>
+          <input formControlName="name" placeholder="Enter name" />
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+          <label>Type</label>
+          <select formControlName="type">
+            <option value="">Select Type</option>
+            <option value="EARNING">Earning</option>
+            <option value="DEDUCTION">Deduction</option>
+          </select>
+        </div>
+
+        <!-- Active -->
+        <div class="form-group checkbox">
+          <input type="checkbox" formControlName="isActive" />
+          <label>Active</label>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            {{ isEditMode ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="closeForm()">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,231 @@
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Pay Structures</h1>
+      <p class="page-sub">{{ payStructures.length }} structure{{ payStructures.length !== 1 ? 's' : '' }} configured</p>
+    </div>
+    <button class="btn-primary" (click)="openAddForm()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+        <path d="M8 2v12M2 8h12"/>
+      </svg>
+      Add Structure
+    </button>
+  </div>
+
+  <!-- Banners -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+      <path d="M3 8l3 3 7-7"/>
+    </svg>
+    {{ successMessage }}
+  </div>
+  <div class="alert alert-error" *ngIf="errorMessage && !showForm">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+      <path d="M8 5v4M8 11v1"/>
+      <circle cx="8" cy="8" r="6"/>
+    </svg>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-wrap">
+    <div class="spinner"></div>
+    <span>Loading pay structures…</span>
+  </div>
+
+  <!-- Table -->
+  <div class="card" *ngIf="!isLoading">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Salary Component</th>
+            <th>Employment Type</th>
+            <th>Calc Type</th>
+            <th>Base</th>
+            <th>Value</th>
+            <th>Optional</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of payStructures; let i = index">
+            <td class="muted">{{ i + 1 }}</td>
+            <td>
+              <span class="comp-name">{{ getSalaryComponentName(item.salaryComponentId) }}</span>
+            </td>
+            <td>
+              <span class="emp-type-badge">{{ getEmploymentTypeLabel(item.employmentTypeId) }}</span>
+            </td>
+            <td>
+              <span class="calc-badge" [ngClass]="item.calculationType === 'PERCENTAGE' ? 'calc-pct' : 'calc-fixed'">
+                {{ item.calculationType ?? '—' }}
+              </span>
+            </td>
+            <td class="muted">{{ item.calculationBase ?? '—' }}</td>
+            <td class="value-cell">
+              <span *ngIf="item.percentage !== null && item.percentage !== undefined" class="value-pct">
+                {{ item.percentage }}%
+              </span>
+              <span *ngIf="item.fixedAmount !== null && item.fixedAmount !== undefined" class="value-fixed">
+                ₹{{ item.fixedAmount | number:'1.0-0' }}
+              </span>
+              <span *ngIf="item.percentage === null && item.fixedAmount === null" class="muted">—</span>
+            </td>
+            <td>
+              <span class="opt-badge" [ngClass]="item.isOptional ? 'opt-yes' : 'opt-no'">
+                {{ item.isOptional ? 'Optional' : 'Required' }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="item.isActive ? 'status-active' : 'status-inactive'">
+                <span class="status-dot"></span>
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>
+              <div class="actions">
+                <button class="btn-icon btn-edit" (click)="onEdit(item.id!)" title="Edit">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
+                    <path d="M11 2l3 3-8 8H3v-3l8-8z"/>
+                  </svg>
+                </button>
+                <button class="btn-icon btn-delete" (click)="onDelete(item.id!)" title="Delete">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
+                    <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="payStructures.length === 0">
+            <td colspan="9" class="empty-state">
+              <svg viewBox="0 0 40 40" fill="none" stroke="#cbd5e1" stroke-width="1.5" width="36" height="36">
+                <rect x="6" y="4" width="28" height="32" rx="3"/>
+                <path d="M12 12h16M12 18h16M12 24h10"/>
+              </svg>
+              <p>No pay structures found.</p>
+              <span>Click "Add Structure" to create one.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">{{ isEditMode ? 'Edit' : 'Add' }} Pay Structure</h3>
+        <p class="modal-sub">{{ isEditMode ? 'Update the existing structure' : 'Define a new salary structure' }}</p>
+      </div>
+      <button class="btn-close" (click)="closeForm()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+          <path d="M2 2l12 12M14 2L2 14"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="alert alert-error modal-alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+
+        <!-- Row 1: Component + Employment Type -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Salary Component <span class="req">*</span></label>
+            <select formControlName="salaryComponentId"
+              [class.invalid]="form.get('salaryComponentId')?.invalid && form.get('salaryComponentId')?.touched">
+              <option value="">Select component…</option>
+              <option *ngFor="let c of salaryComponents" [value]="c.id">{{ c.name }}</option>
+            </select>
+            <span class="field-error"
+              *ngIf="form.get('salaryComponentId')?.invalid && form.get('salaryComponentId')?.touched">
+              Required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Employment Type <span class="req">*</span></label>
+            <select formControlName="employmentTypeId"
+              [class.invalid]="form.get('employmentTypeId')?.invalid && form.get('employmentTypeId')?.touched">
+              <option value="">Select type…</option>
+              <option *ngFor="let e of employmentTypes" [value]="e.id">{{ e.label }}</option>
+            </select>
+            <span class="field-error"
+              *ngIf="form.get('employmentTypeId')?.invalid && form.get('employmentTypeId')?.touched">
+              Required
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 2: Calc Type + Base -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Calculation Type <span class="req">*</span></label>
+            <select formControlName="calculationType">
+              <option *ngFor="let ct of calculationTypes" [value]="ct">{{ ct }}</option>
+            </select>
+          </div>
+
+          <div class="form-group" *ngIf="calcType === 'PERCENTAGE'">
+            <label>Calculation Base</label>
+            <select formControlName="calculationBase">
+              <option *ngFor="let cb of calculationBases" [value]="cb">{{ cb }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Value -->
+        <div class="form-group" *ngIf="calcType === 'PERCENTAGE'">
+          <label>Percentage (%)</label>
+          <div class="input-wrap">
+            <input type="number" formControlName="percentage" min="0" max="100" placeholder="e.g. 50" />
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="calcType === 'FIXED'">
+          <label>Fixed Amount</label>
+          <div class="input-wrap">
+            <span class="input-prefix">₹</span>
+            <input type="number" formControlName="fixedAmount" min="0" placeholder="e.g. 5000" />
+          </div>
+        </div>
+
+        <!-- Optional toggle -->
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-label">Optional Component</p>
+            <p class="toggle-sub">Employee can opt in or out of this component</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" formControlName="isOptional" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeForm()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid">
+          {{ isEditMode ? 'Update Structure' : 'Save Structure' }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
