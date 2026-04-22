@@ -7,6 +7,41 @@
 .page-title  { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px; }
 .page-sub    { font-size: 13px; color: var(--muted); margin: 0; }
 
+.filter-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 240px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.filter-group select {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg-card);
+  outline: none;
+}
+
+.filter-group select:focus {
+  border-color: var(--accent);
+}
+
 /* Alerts */
 .alert {
   display: flex; align-items: center; gap: 8px;

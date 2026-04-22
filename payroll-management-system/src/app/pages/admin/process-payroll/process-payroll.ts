@@ -17,11 +17,11 @@ interface HistoryEntry {
   styleUrl: './process-payroll.css',
 })
 export class ProcessPayrollComponent {
-  loading = true;
   selectedMonth   = new Date().getMonth() + 1;
   selectedYear    = new Date().getFullYear();
   selectedCycleId = '';
   manualCycleId   = '';
+  statusMsg       = '';
   payCycles: PayrollCycle[] = [];
   history: HistoryEntry[] = [];
   step: 'idle' | 'running' | 'processing' | 'done' | 'error' = 'idle';
@@ -35,7 +35,7 @@ export class ProcessPayrollComponent {
     { v: 7,  l: 'July'      }, { v: 8,  l: 'August'     }, { v: 9,  l: 'September' },
     { v: 10, l: 'October'   }, { v: 11, l: 'November'   }, { v: 12, l: 'December'  }
   ];
-  years = [2024, 2025, 2026];
+  years = Array.from({ length: 3 }, (_, i) => this.selectedYear - 1 + i);
 
   constructor(
     private payrollService: PayrollService,
@@ -44,26 +44,30 @@ export class ProcessPayrollComponent {
     this.cycleService.getAll().subscribe({
       next: (r: any) => {
         this.payCycles = Array.isArray(r) ? r : (r.data ?? []);
-        if (this.payCycles.length > 0) {
-          this.selectedCycleId = (this.payCycles[0] as any).id ?? '';
-        }
+        this.syncSelectedCycleId();
         this.cyclesLoaded = true;
-        this.loading = false;
       },
       error: () => {
         this.cyclesLoaded = true;
-        this.loading = false;
       }
     });
   }
 
   get effectiveCycleId(): string { return this.selectedCycleId || this.manualCycleId; }
   monthLabel(v: number): string  { return this.months.find(m => m.v === v)?.l ?? ''; }
+  get cyclePlaceholder(): string {
+    if (!this.cyclesLoaded) return 'Loading cycles…';
+    return this.payCycles.length === 0 ? 'No cycles found' : 'Select cycle…';
+  }
 
   get runMonth():  number { return this.runResult ? this.runResult.data.month  : this.selectedMonth; }
   get runYear():   number { return this.runResult ? this.runResult.data.year   : this.selectedYear; }
   get runStatus(): string { return this.runResult ? this.runResult.data.status : ''; }
   get runId():     string { return this.runResult ? this.runResult.data.payRollDetailsId : ''; }
+
+  onPeriodChange() {
+    this.syncSelectedCycleId();
+  }
 
   run() {
     if (!this.effectiveCycleId) {
@@ -89,16 +93,41 @@ export class ProcessPayrollComponent {
     });
   }
 
+  
+  pollStatus(id: string) {
+    const interval = setInterval(() => {
+      this.payrollService.getStatus(id).subscribe({
+        next: res => {
+          const status = res.data.status;
+          this.statusMsg = status;
+
+          if (status === 'COMPLETED' || status === 'PROCESSED') {
+            clearInterval(interval);
+            this.step = 'done';
+            this.history.unshift({
+              month: this.selectedMonth,
+              year: this.selectedYear,
+              status,
+              id
+            });
+          } else if (status === 'FAILED') {
+            clearInterval(interval);
+            this.errorMsg = 'Payroll processing failed.';
+            this.step = 'error';
+          }
+        },
+        error: () => clearInterval(interval)
+      });
+    }, 3000);
+  }
+
   processPayroll(id: string) {
+    this.statusMsg = 'Starting payroll processing...';
+
     this.payrollService.process(id).subscribe({
       next: () => {
-        this.step = 'done';
-        this.history.unshift({
-          month: this.selectedMonth,
-          year: this.selectedYear,
-          status: 'PROCESSED',
-          id
-        });
+        this.statusMsg = 'Processing payroll entries...';
+        this.pollStatus(id);
       },
       error: err => {
         this.errorMsg = err?.error?.message ?? 'Processing failed.';
@@ -107,5 +136,20 @@ export class ProcessPayrollComponent {
     });
   }
 
-  reset() { this.step = 'idle'; this.runResult = null; this.errorMsg = ''; }
+  reset() { this.step = 'idle'; this.runResult = null; this.errorMsg = ''; this.statusMsg = ''; }
+
+  private syncSelectedCycleId() {
+    if (this.payCycles.length === 0) {
+      this.selectedCycleId = '';
+      return;
+    }
+
+    const matchedCycle = this.payCycles.find((cycle) => {
+      const startDate = new Date(cycle.startDate);
+      return startDate.getMonth() + 1 === this.selectedMonth &&
+        startDate.getFullYear() === this.selectedYear;
+    });
+
+    this.selectedCycleId = matchedCycle?.id ?? this.payCycles[0]?.id ?? '';
+  }
 }

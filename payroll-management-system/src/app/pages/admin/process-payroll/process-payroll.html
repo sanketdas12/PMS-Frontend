@@ -40,28 +40,24 @@
         <div class="form-grid">
       <div class="form-group">
         <label>Month</label>
-        <select [(ngModel)]="selectedMonth">
+        <select [(ngModel)]="selectedMonth" (ngModelChange)="onPeriodChange()">
           <option *ngFor="let m of months" [value]="m.v">{{ m.l }}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Year</label>
-        <select [(ngModel)]="selectedYear">
+        <select [(ngModel)]="selectedYear" (ngModelChange)="onPeriodChange()">
           <option *ngFor="let y of years" [value]="y">{{ y }}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Pay Cycle</label>
-        <!-- Always render a select, just disable/populate based on state -->
-        <select [(ngModel)]="selectedCycleId" [disabled]="!cyclesLoaded || payCycles.length === 0">
-          <option value="" *ngIf="!cyclesLoaded">Loading cycles…</option>
-          <option value="" *ngIf="cyclesLoaded && payCycles.length === 0">No cycles found</option>
-          <option value="" *ngIf="cyclesLoaded && payCycles.length > 0">Select cycle…</option>
+        <select [(ngModel)]="selectedCycleId" [disabled]="!cyclesLoaded">
+          <option value="" disabled>{{ cyclePlaceholder }}</option>
           <option *ngFor="let c of payCycles" [value]="c.id">{{ c.cycleName }}</option>
         </select>
-        <!-- Manual input shown below if no cycles -->
         <input
           *ngIf="payCycles.length === 0 && cyclesLoaded"
           type="text"
@@ -82,7 +78,7 @@
     </div>
 
     <div class="form-footer">
-      <button class="btn-run" (click)="run()" [disabled]="!cyclesLoaded || loading">
+      <button class="btn-run" (click)="run()" [disabled]="!cyclesLoaded">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
           <polygon points="4,2 14,8 4,14" fill="currentColor" stroke="none"/>
         </svg>
@@ -95,7 +91,7 @@
   <div class="status-card" *ngIf="step === 'running' || step === 'processing'">
     <div class="spinner"></div>
     <p class="status-title">
-      {{ step === 'running' ? 'Initiating payroll run…' : 'Processing payroll entries…' }}
+      {{ step === 'running' ? 'Initiating payroll run…' : (statusMsg || 'Processing payroll entries…') }}
     </p>
     <p class="status-sub" *ngIf="runResult">
       Run ID: <code>{{ runId }}</code>

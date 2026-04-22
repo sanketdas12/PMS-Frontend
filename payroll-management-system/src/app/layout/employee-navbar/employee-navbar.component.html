@@ -20,12 +20,17 @@
 
   <div class="nav-right">
     <div class="profile">
-      <div class="avatar">{{ initials }}</div>
+      <div class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+          <path d="M5 19.5a7 7 0 0 1 14 0"/>
+        </svg>
+      </div>
       <div class="profile-info">
         <span class="profile-name">{{ name }}</span>
         <span class="profile-email">{{ email }}</span>
       </div>
     </div>
-    <button class="logout-btn" (click)="logout()">Sign out</button>
+    <button class="logout-btn" (click)="logout()">Log out</button>
   </div>
 </header>

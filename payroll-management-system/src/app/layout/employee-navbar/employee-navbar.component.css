@@ -48,13 +48,21 @@
   width: 34px; height: 34px; border-radius: 50%;
   background: linear-gradient(135deg, #7c3aed, #8b5cf6);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  color: #fff; flex-shrink: 0;
+}
+.avatar svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .profile-name  { display: block; font-size: 13px; font-weight: 500; color: #f1f5f9; }
 .profile-email { display: block; font-size: 11px; color: #64748b; }
 .logout-btn {
   font-size: 12px; padding: 6px 12px;
-  border: 1px solid rgba(148,163,184,0.25); border-radius: 6px;
-  background: transparent; color: #94a3b8; cursor: pointer; transition: all 0.15s;
+  border: 1px solid #7c3aed; border-radius: 6px;
+  background: #7c3aed; color: #ffffff; font-weight: 700; cursor: pointer; transition: all 0.15s;
 }
-.logout-btn:hover { background: rgba(255,255,255,0.05); color: #f1f5f9; }
+.logout-btn:hover { background: #6d28d9; border-color: #6d28d9; color: #ffffff; }

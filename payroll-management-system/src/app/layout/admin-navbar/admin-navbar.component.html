@@ -32,7 +32,12 @@
     <!-- Profile -->
     <div class="profile-wrap">
       <button type="button" class="profile-btn" (click)="toggleProfile()">
-        <div class="avatar">{{ initials }}</div>
+        <div class="avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+            <path d="M5 19.5a7 7 0 0 1 14 0"/>
+          </svg>
+        </div>
         <div class="profile-info">
           <span class="profile-name">{{ name }}</span>
           <span class="profile-role">Administrator</span>
@@ -45,14 +50,19 @@
       <!-- Profile dropdown -->
       <div class="dropdown profile-dropdown" *ngIf="showProfile()" (click)="$event.stopPropagation()">
         <div class="profile-drop-header">
-          <div class="avatar-lg">{{ initials }}</div>
+          <div class="avatar-lg" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+              <path d="M5 19.5a7 7 0 0 1 14 0"/>
+            </svg>
+          </div>
           <div>
             <div class="pd-name">{{ name }}</div>
             <div class="pd-email">{{ email }}</div>
           </div>
         </div>
         <div class="dropdown-divider"></div>
-        <button type="button" class="dropdown-item danger" (click)="logout()">Sign out</button>
+        <button type="button" class="dropdown-item logout-action" (click)="logout()">Log out</button>
       </div>
     </div>
 

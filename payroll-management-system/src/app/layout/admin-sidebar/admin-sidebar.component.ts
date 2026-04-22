@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
 
 export interface SidebarChild  { label: string; path: string; }
 export interface SidebarItem   { label: string; icon: string; path?: string; key?: string; badge?: string; badgeClass?: string; children?: SidebarChild[]; }
@@ -15,8 +14,6 @@ export interface SidebarSection { title: string; items: SidebarItem[]; }
   styleUrls: ['./admin-sidebar.component.css']
 })
 export class AdminSidebarComponent {
-  constructor(private authService: AuthService) {}
-
   expanded = signal<string[]>(['master-data']);
 
   sections: SidebarSection[] = [
@@ -66,5 +63,4 @@ export class AdminSidebarComponent {
 
   isExpanded(key: string): boolean { return this.expanded().includes(key); }
   getKey(item: SidebarItem): string { return item.key ?? item.label.toLowerCase().replace(/\s+/g, '-'); }
-  logout(): void { this.authService.logout(); }
 }

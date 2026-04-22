@@ -12,7 +12,7 @@
 
 .state-msg { color: var(--muted); font-size: 14px; }
 
-.assign-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: flex-end; }
+.assign-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end; }
 @media (max-width: 680px) { .assign-form { grid-template-columns: 1fr; } }
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 .form-group label { font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; }

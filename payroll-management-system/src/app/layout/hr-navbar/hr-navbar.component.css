@@ -38,17 +38,6 @@
   gap: 14px;
 }
 
-.role-badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  background: rgba(22,163,74,0.18);
-  color: #4ade80;
-  border: 1px solid rgba(74,222,128,0.25);
-  border-radius: 20px;
-  letter-spacing: 0.5px;
-}
-
 .profile { display: flex; align-items: center; gap: 8px; }
 .avatar {
   width: 34px;
@@ -58,10 +47,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
   color: #fff;
   flex-shrink: 0;
+}
+.avatar svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .profile-name  { display: block; font-size: 13px; font-weight: 500; color: #f1f5f9; }
 .profile-email { display: block; font-size: 11px; color: #64748b; }
@@ -69,11 +64,12 @@
 .logout-btn {
   font-size: 12px;
   padding: 6px 12px;
-  border: 1px solid rgba(148,163,184,0.25);
+  border: 1px solid #16a34a;
   border-radius: 6px;
-  background: transparent;
-  color: #94a3b8;
+  background: #16a34a;
+  color: #ffffff;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s;
 }
-.logout-btn:hover { background: rgba(255,255,255,0.05); color: #f1f5f9; }
+.logout-btn:hover { background: #15803d; border-color: #15803d; color: #ffffff; }

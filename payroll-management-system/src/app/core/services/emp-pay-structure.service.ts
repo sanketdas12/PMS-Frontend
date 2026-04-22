@@ -16,7 +16,7 @@ export interface EmpPayStructureResponse {
 
 @Injectable({ providedIn: 'root' })
 export class EmpPayStructureService {
-  private baseUrl = `${environment.apiUrl}/emp-pay-structures`;
+  private baseUrl = `${environment.apiUrl}/emp-pay-structure`;
   private allAssignments$?: Observable<{ data: EmpPayStructureResponse[]; message: string }>;
 
   constructor(private http: HttpClient) {}

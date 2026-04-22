@@ -18,6 +18,15 @@
 
     <div class="assign-form" *ngIf="!loadingData">
       <div class="form-group">
+        <label>Employment Type</label>
+        <select [(ngModel)]="selectedEmpTypeId" (change)="loadStructures(selectedEmpTypeId)">
+          <option value="" disabled>Select employment type...</option>
+          <option *ngFor="let type of employmentTypes" [value]="type.id">
+            {{ type.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>Employee</label>
         <select [(ngModel)]="selectedEmpId">
           <option value="">Select employee...</option>

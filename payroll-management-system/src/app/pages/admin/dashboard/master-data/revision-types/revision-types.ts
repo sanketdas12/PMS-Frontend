@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { RevisionTypeService, RevisionType } from '../../../../../core/services/revision-type.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { RevisionTypeService, RevisionType } from '../../../../../core/services/
   templateUrl: './revision-types.html',
   styleUrl: './revision-types.css'
 })
-export class RevisionTypes implements OnInit {
+export class RevisionTypes implements OnInit, OnDestroy {
 
   revisionTypes: RevisionType[] = [];
   form!: FormGroup;
@@ -20,6 +21,8 @@ export class RevisionTypes implements OnInit {
   isLoading      = false;
   errorMessage   = '';
   successMessage = '';
+  private loadSub?: Subscription;
+  private loadRequestId = 0;
 
   readonly categories = ['BONUS', 'REIMBURSEMENT', 'DEDUCTION', 'INCREMENT', 'ALLOWANCE'];
 
@@ -33,6 +36,10 @@ export class RevisionTypes implements OnInit {
     this.loadAll();
   }
 
+  ngOnDestroy(): void {
+    this.loadSub?.unsubscribe();
+  }
+
   initForm(): void {
     this.form = this.fb.group({
       revisionName: ['', Validators.required],
@@ -40,15 +47,21 @@ export class RevisionTypes implements OnInit {
     });
   }
 
-  loadAll(): void {
+  loadAll(forceRefresh = false): void {
+    this.loadSub?.unsubscribe();
+
     this.isLoading    = true;
     this.errorMessage = '';
-    this.revisionTypeService.getAll().subscribe({
+    const requestId = ++this.loadRequestId;
+
+    this.loadSub = this.revisionTypeService.getAll(forceRefresh).subscribe({
       next: (data) => {
-        this.revisionTypes = data;
+        if (requestId !== this.loadRequestId) return;
+        this.revisionTypes = Array.isArray(data) ? data : [];
         this.isLoading = false;
       },
       error: (err) => {
+        if (requestId !== this.loadRequestId) return;
         this.isLoading = false;
         this.errorMessage = err.status === 403
           ? 'Access denied. You do not have permission to view revision types.'
@@ -97,7 +110,7 @@ export class RevisionTypes implements OnInit {
         next: () => {
           this.successMessage = 'Revision type updated successfully.';
           this.closeForm();
-          this.loadAll();
+          this.loadAll(true);
         },
         error: (err) => {
           this.errorMessage = err.status === 403
@@ -110,7 +123,7 @@ export class RevisionTypes implements OnInit {
         next: () => {
           this.successMessage = 'Revision type created successfully.';
           this.closeForm();
-          this.loadAll();
+          this.loadAll(true);
         },
         error: (err) => {
           this.errorMessage = err.status === 403
@@ -127,7 +140,8 @@ export class RevisionTypes implements OnInit {
     this.revisionTypeService.delete(id).subscribe({
       next: () => {
         this.successMessage = 'Revision type deleted successfully.';
-        this.loadAll();
+        this.revisionTypes = this.revisionTypes.filter(item => item.id !== id);
+        this.loadAll(true);
       },
       error: (err) => {
         this.errorMessage = err.status === 403

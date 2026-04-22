@@ -1,76 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, shareReplay, tap, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface PayStructure {
   id?: string;
   salaryComponentId: string;
   employmentTypeId: string;
-  calculationType: 'PERCENTAGE' | 'FIXED';
+  calculationType?: 'PERCENTAGE' | 'FIXED';
   calculationBase?: string;
   percentage?: number | null;
   fixedAmount?: number | null;
   isOptional: boolean;
+  isActive?: boolean;
 }
 
-export interface PayStructureResponse {
-  id?:              string;
-  salaryComponentId: string;
-  employmentTypeId:  string;
-  calculationType?:  'PERCENTAGE' | 'FIXED';  // add ? here
-  calculationBase?:  string;
-  percentage:        number | null;
-  fixedAmount:       number | null;
-  isOptional:        boolean;
-  isActive:          boolean;
+export interface EmploymentType {
+  id: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class PayStructureService {
-
-  private baseUrl = `${environment.apiUrl}/pay-structures`;
-  private allPayStructures$?: Observable<PayStructureResponse[]>;
+  private baseUrl = `${environment.apiUrl}/pay-structures/employment`;
+  private empTypeUrl = `${environment.apiUrl}/employment-types`;
 
   constructor(private http: HttpClient) {}
 
-  getAll(forceRefresh = false): Observable<PayStructureResponse[]> {
-    if (!this.allPayStructures$ || forceRefresh) {
-      this.allPayStructures$ = this.http.get<PayStructureResponse[]>(this.baseUrl).pipe(
-        catchError((err) => {
-          this.clearCache();
-          return throwError(() => err);
-        }),
-        shareReplay(1)
-      );
-    }
-
-    return this.allPayStructures$;
-  }
-
-  getById(id: string): Observable<PayStructureResponse[]> {
-    return this.http.get<PayStructureResponse[]>(`${this.baseUrl}/${id}`);
-  }
-
-  create(data: PayStructure): Observable<any> {
-    return this.http.post<any>(this.baseUrl, data).pipe(
-      tap(() => this.clearCache())
+  // GET /api/employment-types
+  getEmploymentTypes(): Observable<EmploymentType[]> {
+    return this.http.get<EmploymentType[]>(this.empTypeUrl).pipe(
+      catchError(err => throwError(() => err))
     );
   }
 
-  update(id: string, data: Partial<PayStructure>): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, data).pipe(
-      tap(() => this.clearCache())
+  // GET /api/pay-structures/{employmentTypeId}
+  getByEmploymentType(employmentTypeId: string): Observable<PayStructure[]> {
+    return this.http.get<PayStructure[]>(
+      `${this.baseUrl}/${employmentTypeId}`
+    ).pipe(
+      catchError(err => throwError(() => err))
     );
   }
 
-  delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${id}`).pipe(
-      tap(() => this.clearCache())
-    );
+  // POST /api/pay-structures
+  create(data: PayStructure): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(this.baseUrl, data);
   }
 
-  private clearCache(): void {
-    this.allPayStructures$ = undefined;
+  // PUT /api/pay-structures/{id}
+  update(id: string, data: Partial<PayStructure>): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.baseUrl}/${id}`, data);
+  }
+
+  // DELETE /api/pay-structures/{id}
+  delete(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`);
   }
 }

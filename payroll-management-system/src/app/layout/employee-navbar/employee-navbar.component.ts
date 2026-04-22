@@ -14,7 +14,6 @@ export class EmployeeNavbarComponent {
   private authService = inject(AuthService);
   name     = this.authService.getName()  ?? 'Employee';
   email    = this.authService.getEmail() ?? '';
-  initials = this.name.split(' ').map((w:string) => w[0]).join('').toUpperCase().slice(0,2) || 'ME';
 
   navItems = [
     { label: 'Dashboard', path: '/employee/dashboard' },

@@ -23,12 +23,26 @@ export class TaxSlabs implements OnInit {
   constructor(
     private fb: FormBuilder,
     private taxSlabService: TaxSlabService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initForm();
+
+    this.filterYear = this.getCurrentFinancialYear(); // 👈 set year
     this.loadAll();
   }
+
+  getCurrentFinancialYear(): string {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+
+  if (month >= 4) {
+    return `${year}-${(year + 1).toString().slice(-2)}`;
+  } else {
+    return `${year - 1}-${year.toString().slice(-2)}`;
+  }
+}
 
   initForm() {
     this.form = this.fb.group({
@@ -43,7 +57,7 @@ export class TaxSlabs implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.taxSlabService.getAll().subscribe({
+    this.taxSlabService.getAll(this.filterYear).subscribe({
       next: (data: TaxSlab[]) => {
         this.taxSlabs = data;
         this.isLoading = false;

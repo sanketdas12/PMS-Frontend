@@ -13,7 +13,6 @@ export class HrNavbarComponent {
   private authService = inject(AuthService);
   name  = this.authService.getName()  ?? 'HR User';
   email = this.authService.getEmail() ?? '';
-  initials = this.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'HR';
 
   logout() { this.authService.logout(); }
 }

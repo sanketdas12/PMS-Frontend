@@ -35,7 +35,14 @@ export class AdminShellComponent implements OnInit {
     this.warmupTimer = setTimeout(() => {
       this.employeeService.getAll().subscribe({ error: () => {} });
       this.empPayStructureService.getAll().subscribe({ error: () => {} });
-      this.payStructureService.getAll().subscribe({ error: () => {} });
+      this.payStructureService.getEmploymentTypes().subscribe({
+        next: types => {
+          types.forEach(type => {
+            this.payStructureService.getByEmploymentType(type.id).subscribe({ error: () => {} });
+          });
+        },
+        error: () => {}
+      });
       this.salaryComponentService.getAll().subscribe({ error: () => {} });
       this.payrollCycleService.getAll().subscribe({ error: () => {} });
       this.revisionTypeService.getAll().subscribe({ error: () => {} });

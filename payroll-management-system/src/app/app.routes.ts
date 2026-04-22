@@ -18,6 +18,7 @@ export const routes: Routes = [
       import('./layout/admin-shell/admin-shell.component').then(m => m.AdminShellComponent),
     children: [
       { path: 'dashboard',       loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then(m => m.AdminDashboardComponent) },
+      { path: 'employees',       loadComponent: () => import('./pages/hr/employees/employees.component').then(m => m.HrEmployeesComponent) },
       { path: 'master-data',     loadChildren: () => import('./pages/admin/dashboard/master-data/master-data.routes').then(m => m.MASTER_DATA_ROUTES) },
       { path: 'assign-pay',      loadComponent: () => import('./pages/admin/assign-pay/assign-pay.component').then(m => m.AssignPayComponent) },
       { path: 'process-payroll', loadComponent: () => import('./pages/admin/process-payroll/process-payroll').then(m => m.ProcessPayrollComponent) },
@@ -28,7 +29,6 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/payroll-revisions/payroll-revisions').then(m => m.PayrollRevisionsComponent),
         children: [
           { path: 'revision-history',  loadComponent: () => import('./pages/admin/payroll-revisions/revision-history/revision-history').then(m => m.RevisionHistory) },
-          { path: 'pending-approvals', loadComponent: () => import('./pages/admin/payroll-revisions/pending-approvals/pending-approvals').then(m => m.PendingApprovals) },
           { path: '', redirectTo: 'revision-history', pathMatch: 'full' }
         ]
       },

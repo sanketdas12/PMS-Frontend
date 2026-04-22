@@ -14,6 +14,16 @@
     </button>
   </div>
 
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="empTypeFilter">Employment Type</label>
+      <select id="empTypeFilter" [(ngModel)]="selectedEmpTypeId" (change)="loadStructures(selectedEmpTypeId)">
+        <option value="" disabled>Select employment type…</option>
+        <option *ngFor="let type of employmentTypes" [value]="type.id">{{ type.name }}</option>
+      </select>
+    </div>
+  </div>
+
   <!-- Banners -->
   <div class="alert alert-success" *ngIf="successMessage">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
@@ -56,7 +66,7 @@
           <tr *ngFor="let item of payStructures; let i = index">
             <td class="muted">{{ i + 1 }}</td>
             <td>
-              <span class="comp-name">{{ getSalaryComponentName(item.salaryComponentId) }}</span>
+              <span class="comp-name">{{ getSalaryComponentName(item) }}</span>
             </td>
             <td>
               <span class="emp-type-badge">{{ getEmploymentTypeLabel(item.employmentTypeId) }}</span>
@@ -160,7 +170,7 @@
             <select formControlName="employmentTypeId"
               [class.invalid]="form.get('employmentTypeId')?.invalid && form.get('employmentTypeId')?.touched">
               <option value="">Select type…</option>
-              <option *ngFor="let e of employmentTypes" [value]="e.id">{{ e.label }}</option>
+              <option *ngFor="let e of employmentTypes" [value]="e.id">{{ e.name }}</option>
             </select>
             <span class="field-error"
               *ngIf="form.get('employmentTypeId')?.invalid && form.get('employmentTypeId')?.touched">

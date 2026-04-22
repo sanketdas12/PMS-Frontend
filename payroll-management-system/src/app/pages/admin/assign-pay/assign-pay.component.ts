@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService, Employee } from '../../../core/services/employee.service';
-import { PayStructureService, PayStructureResponse } from '../../../core/services/pay-structure.service';
+import { EmploymentType, PayStructure, PayStructureService } from '../../../core/services/pay-structure.service';
 import { EmpPayStructureService, EmpPayStructureResponse } from '../../../core/services/emp-pay-structure.service';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
@@ -15,17 +15,19 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
 })
 export class AssignPayComponent implements OnInit {
   employees: Employee[] = [];
-  payStructures: PayStructureResponse[] = [];
+  employmentTypes: EmploymentType[] = [];
+  payStructures: PayStructure[] = [];
   assignments: EmpPayStructureResponse[] = [];
 
   selectedEmpId    = '';
+  selectedEmpTypeId = '';
   selectedStructId = '';
   loading     = false;
   loadingData = true;
   msg     = '';
   msgType: 'success' | 'error' = 'success';
-
-  private loaded = 0;
+  private employeesLoaded = false;
+  private structuresLoaded = false;
 
   constructor(
     private empService: EmployeeService,
@@ -35,17 +37,71 @@ export class AssignPayComponent implements OnInit {
 
   ngOnInit() {
     this.empService.getAll().subscribe({
-      next: r => { this.employees = r.data ?? (r as any); this.checkReady(); },
-      error: () => this.checkReady()
+      next: r => {
+        this.employees = r.data ?? (r as any);
+        this.employeesLoaded = true;
+        this.checkReady();
+      },
+      error: () => {
+        this.employeesLoaded = true;
+        this.checkReady();
+      }
     });
-    this.psService.getAll().subscribe({
-      next: r => { this.payStructures = Array.isArray(r) ? r : (r as any).data ?? []; this.checkReady(); },
-      error: () => this.checkReady()
+
+    this.psService.getEmploymentTypes().subscribe({
+      next: types => {
+        this.employmentTypes = Array.isArray(types) ? types : [];
+
+        if (this.employmentTypes.length === 0) {
+          this.payStructures = [];
+          this.structuresLoaded = true;
+          this.checkReady();
+          return;
+        }
+
+        this.selectedEmpTypeId = this.employmentTypes[0].id;
+        this.loadStructures(this.selectedEmpTypeId);
+      },
+      error: () => {
+        this.structuresLoaded = true;
+        this.checkReady();
+      }
     });
+
     this.loadAssignments();
   }
 
-  checkReady() { this.loaded++; if (this.loaded >= 2) this.loadingData = false; }
+  checkReady() {
+    if (this.employeesLoaded && this.structuresLoaded) {
+      this.loadingData = false;
+    }
+  }
+
+  loadStructures(employmentTypeId: string) {
+    this.selectedEmpTypeId = employmentTypeId;
+    this.selectedStructId = '';
+    this.structuresLoaded = false;
+
+    if (!employmentTypeId) {
+      this.payStructures = [];
+      this.structuresLoaded = true;
+      this.checkReady();
+      return;
+    }
+
+    this.psService.getByEmploymentType(employmentTypeId).subscribe({
+      next: data => {
+        this.payStructures = Array.isArray(data) ? data : [];
+        this.structuresLoaded = true;
+        this.checkReady();
+      },
+      error: () => {
+        this.payStructures = [];
+        this.structuresLoaded = true;
+        this.checkReady();
+      }
+    });
+  }
 
   loadAssignments() {
     this.assignService.getAll().subscribe({
@@ -88,7 +144,7 @@ export class AssignPayComponent implements OnInit {
     return e ? `${e.firstName} ${e.lastName}` : empId.slice(0, 8) + '...';
   }
 
-  structLabel(ps: PayStructureResponse): string {
+  structLabel(ps: PayStructure): string {
     if (ps.fixedAmount != null) return `Fixed — Rs.${ps.fixedAmount}`;
     if (ps.percentage  != null) return `Percentage — ${ps.percentage}%`;
     return ps.id ? ps.id.slice(0, 8) + '...' : 'Unknown';

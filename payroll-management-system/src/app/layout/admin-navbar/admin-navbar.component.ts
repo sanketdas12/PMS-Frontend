@@ -14,7 +14,6 @@ export class AdminNavbarComponent {
 
   name     = this.authService.getName()  ?? 'Admin';
   email    = this.authService.getEmail() ?? '';
-  initials = this.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) || 'AD';
 
   showProfile = signal(false);
 
