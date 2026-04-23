@@ -1,0 +1,70 @@
+<header class="navbar" (click)="closeDropdowns()">
+
+  <!-- Brand -->
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20">
+        <path d="M3 15L10 5l7 10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M6 15h8" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="brand-copy">
+      <span class="brand-name">PayrollPro</span>
+      <span class="brand-tag">Admin Console</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="nav-center" (click)="$event.stopPropagation()">
+    <div class="search-shell">
+      <div class="search-box">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="7" cy="7" r="4"/><path d="M10 10l3 3"/>
+        </svg>
+        <input type="text" placeholder="Search employees, reports, or payroll runs" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div class="nav-right" (click)="$event.stopPropagation()">
+
+    <!-- Profile -->
+    <div class="profile-wrap">
+      <button type="button" class="profile-btn" (click)="toggleProfile()">
+        <div class="avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+            <path d="M5 19.5a7 7 0 0 1 14 0"/>
+          </svg>
+        </div>
+        <div class="profile-info">
+          <span class="profile-name">{{ name }}</span>
+          <span class="profile-role">Administrator</span>
+        </div>
+        <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4.5l3 3 3-3"/>
+        </svg>
+      </button>
+
+      <!-- Profile dropdown -->
+      <div class="dropdown profile-dropdown" *ngIf="showProfile()" (click)="$event.stopPropagation()">
+        <div class="profile-drop-header">
+          <div class="avatar-lg" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+              <path d="M5 19.5a7 7 0 0 1 14 0"/>
+            </svg>
+          </div>
+          <div>
+            <div class="pd-name">{{ name }}</div>
+            <div class="pd-email">{{ email }}</div>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <button type="button" class="dropdown-item logout-action" (click)="logout()">Log out</button>
+      </div>
+    </div>
+
+  </div>
+</header>

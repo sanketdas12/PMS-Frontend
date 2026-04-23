@@ -1,0 +1,96 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Employee Payslips</h1>
+      <p class="page-sub">View salary breakdown</p>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="card filter-card">
+    <div class="filter-form">
+      <div class="form-group">
+        <label>Employee</label>
+        <select [(ngModel)]="selectedEmpId">
+          <option value="">Select employee…</option>
+          <option *ngFor="let emp of employees" [value]="emp.empId">
+            {{ emp.firstName }} {{ emp.lastName }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Month</label>
+        <select [(ngModel)]="selectedMonth">
+          <option *ngFor="let m of months" [value]="m.v">{{ m.l }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <select [(ngModel)]="selectedYear">
+          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+        </select>
+      </div>
+      <button class="btn-primary" (click)="fetch()" [disabled]="loading">
+        {{ loading ? 'Loading…' : 'View Payslip' }}
+      </button>
+    </div>
+    <p class="error-msg" *ngIf="error">{{ error }}</p>
+  </div>
+
+  <!-- Skeleton: table -->
+  <div class="payslip-card" *ngIf="loading">
+    <app-skeleton height="28px" width="200px"></app-skeleton>
+    <app-skeleton height="16px" width="260px" style="margin-top:8px"></app-skeleton>
+    <div class="divider" style="margin-top:16px"></div>
+    <app-skeleton *ngFor="let i of [1,2,3,4,5]" height="36px" style="margin-top:8px"></app-skeleton>
+    <div class="divider" style="margin-top:16px"></div>
+    <app-skeleton height="36px" style="margin-top:8px"></app-skeleton>
+    <app-skeleton height="36px" style="margin-top:8px"></app-skeleton>
+    <app-skeleton height="44px" style="margin-top:8px"></app-skeleton>
+  </div>
+
+  <!-- Payslip -->
+  <div class="payslip-card" *ngIf="salary">
+    <div class="payslip-header">
+      <div class="payslip-co">
+        <div class="co-logo">P</div>
+        <div>
+          <div class="co-name">PayrollPro Corp.</div>
+          <div class="co-sub">Payslip for {{ monthLabel() }} {{ selectedYear }}</div>
+        </div>
+      </div>
+      <span class="paid-badge">Paid</span>
+    </div>
+    <div class="payslip-meta">
+      <div class="meta-item"><span class="meta-label">Employee</span><span class="meta-val">{{ empName() }}</span></div>
+      <div class="meta-item"><span class="meta-label">Employee ID</span><span class="meta-val mono">{{ salary.empId.slice(0,8) }}…</span></div>
+      <div class="meta-item"><span class="meta-label">Pay Period</span><span class="meta-val">{{ monthLabel() }} {{ selectedYear }}</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="components-grid">
+      <div>
+        <div class="comp-section-title">Earnings</div>
+        <div class="comp-row" *ngFor="let c of earnings()">
+          <span>{{ c.compName }}</span>
+          <span class="comp-amt">₹{{ c.amount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+      <div *ngIf="deductions().length > 0">
+        <div class="comp-section-title">Deductions</div>
+        <div class="comp-row" *ngFor="let c of deductions()">
+          <span>{{ c.compName }}</span>
+          <span class="comp-amt red">−₹{{ c.amount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="totals">
+      <div class="total-row"><span>Gross Salary</span><span>₹{{ salary.grossSalary | number:'1.2-2' }}</span></div>
+      <div class="total-row"><span>Total Deductions</span><span class="red">−₹{{ salary.totalDeductions | number:'1.2-2' }}</span></div>
+      <div class="net-row"><span>Net Salary</span><span class="green">₹{{ salary.netSalary | number:'1.2-2' }}</span></div>
+    </div>
+    <div class="payslip-actions">
+      <button class="btn-download" (click)="downloadPdf()">↓ Download PDF</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Payroll Revisions</h1>
+      <p class="page-sub">Review and manage salary revision history</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="7" cy="7" r="4"/><path d="M10 10l3 3"/>
+      </svg>
+      <input type="text" placeholder="Search by employee, department…" [(ngModel)]="searchQuery" (ngModelChange)="search()" />
+    </div>
+
+    <select class="filter-select" [(ngModel)]="selectedMonth" (ngModelChange)="search()">
+      <option value="">All Months</option>
+      <option *ngFor="let m of months" [value]="m.v">{{ m.l }}</option>
+    </select>
+
+    <select class="filter-select" [(ngModel)]="selectedYear" (ngModelChange)="search()">
+      <option value="">All Years</option>
+      <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+    </select>
+  </div>
+
+  <app-skeleton *ngIf="loading" type="list" [count]="6"></app-skeleton>
+
+  <div *ngIf="error" class="state-msg error">{{ error }}</div>
+
+  <div class="card" *ngIf="!loading">
+    <div class="card-header">
+      <span class="card-title">Revision Records</span>
+      <span class="card-meta muted">{{ filtered.length }} records</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Effective Month</th>
+            <th>Previous Net (₹)</th>
+            <th>Revised Net (₹)</th>
+            <th>Change</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of filtered">
+            <td class="name-cell">{{ r.firstName }} {{ r.lastName }}</td>
+            <td>{{ r.department ?? '—' }}</td>
+            <td class="muted">{{ r.month }} / {{ r.year }}</td>
+            <td>{{ r.previousNet | number:'1.2-2' }}</td>
+            <td class="fw500">{{ r.revisedNet | number:'1.2-2' }}</td>
+            <td>
+              <span [ngClass]="r.revisedNet >= r.previousNet ? 'green' : 'red'">
+                {{ r.revisedNet >= r.previousNet ? '+' : '' }}{{ (r.revisedNet - r.previousNet) | number:'1.2-2' }}
+              </span>
+            </td>
+            <td>
+              <span class="pill" [ngClass]="statusClass(r.status)">{{ r.status }}</span>
+            </td>
+          </tr>
+          <tr *ngIf="filtered.length === 0">
+            <td colspan="7" class="empty-row">No revision records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

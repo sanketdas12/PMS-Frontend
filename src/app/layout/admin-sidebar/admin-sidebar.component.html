@@ -1,0 +1,93 @@
+<aside class="sidebar">
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <ng-container *ngFor="let section of sections">
+      <div class="section-label">{{ section.title }}</div>
+
+      <ng-container *ngFor="let item of section.items">
+
+        <!-- Dropdown parent -->
+        <ng-container *ngIf="item.children; else simpleLink">
+          <button class="nav-item" [class.open]="isExpanded(getKey(item))" (click)="toggleExpand(getKey(item))">
+            <span class="nav-icon">
+              <ng-container [ngSwitch]="item.icon">
+                <ng-container *ngSwitchCase="'master'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="5" height="5" rx="1.3"/><rect x="12" y="3" width="5" height="5" rx="1.3"/>
+                    <rect x="3" y="12" width="5" height="5" rx="1.3"/><rect x="12" y="12" width="5" height="5" rx="1.3"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchCase="'reports'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 15h14"/><path d="M5.5 12.5l3-3 2.3 2.1 4.2-5.1"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchCase="'revision'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 5v5h5"/><path d="M5 10a5.5 5.5 0 1 0 2-4.2"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchCase="'payslip'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3.5h6.8L16.5 7v9.2a1.3 1.3 0 0 1-1.3 1.3H6a1.3 1.3 0 0 1-1.3-1.3V4.8A1.3 1.3 0 0 1 6 3.5z"/>
+                    <path d="M12.8 3.5V7h3.7"/><path d="M7.4 10.2h5.2M7.4 13h5.2"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10" cy="10" r="6"/>
+                  </svg>
+                </ng-container>
+              </ng-container>
+            </span>
+            <span class="nav-label">{{ item.label }}</span>
+            <span class="nav-badge" *ngIf="item.badge" [ngClass]="item.badgeClass">{{ item.badge }}</span>
+            <span class="chevron" [class.rotated]="isExpanded(getKey(item))">▼</span>
+          </button>
+
+          <div class="children" [class.open]="isExpanded(getKey(item))">
+            <a *ngFor="let child of item.children" class="child-item" [routerLink]="child.path" routerLinkActive="active">
+              • {{ child.label }}
+            </a>
+          </div>
+        </ng-container>
+
+        <!-- Simple link -->
+        <ng-template #simpleLink>
+          <a class="nav-item" [routerLink]="item.path" routerLinkActive="active">
+            <span class="nav-icon">
+              <ng-container [ngSwitch]="item.icon">
+                <ng-container *ngSwitchCase="'dashboard'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="6" height="6" rx="1.4"/><rect x="11" y="3" width="6" height="4.5" rx="1.4"/>
+                    <rect x="3" y="11" width="6" height="6" rx="1.4"/><rect x="11" y="9.5" width="6" height="7.5" rx="1.4"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchCase="'process'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10" cy="10" r="6.2"/><path d="M7.2 10.1l1.9 1.9 3.8-4.1"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchCase="'assign'">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 10h7.8"/><path d="M10 6.4 13.6 10 10 13.6"/><path d="M15.5 5v10"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10" cy="10" r="6"/>
+                  </svg>
+                </ng-container>
+              </ng-container>
+            </span>
+            <span class="nav-label">{{ item.label }}</span>
+            <span class="nav-badge" *ngIf="item.badge" [ngClass]="item.badgeClass">{{ item.badge }}</span>
+          </a>
+        </ng-template>
+
+      </ng-container>
+      <div class="section-divider"></div>
+    </ng-container>
+  </nav>
+</aside>

@@ -1,0 +1,75 @@
+.page { padding: 24px; max-width: 860px; }
+.page-header { margin-bottom: 20px; }
+.page-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px; }
+.page-sub   { font-size: 13px; color: var(--muted); margin: 0; }
+.page-sub code { background: var(--bg-card2); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+.filter-card { padding: 20px; margin-bottom: 20px; }
+.filter-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end; }
+@media (max-width: 680px) { .filter-form { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; }
+.form-group select {
+  padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; color: var(--text); background: var(--bg-card); outline: none; cursor: pointer;
+}
+.form-group select:focus { border-color: var(--accent); }
+.btn-primary {
+  padding: 9px 18px; background: var(--accent); color: #fff; border: none;
+  border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.error-msg { color: var(--red); font-size: 13px; margin: 12px 0 0; }
+
+/* Payslip */
+.payslip-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.payslip-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+}
+.payslip-co { display: flex; align-items: center; gap: 12px; }
+.co-logo {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff;
+}
+.co-name { font-size: 15px; font-weight: 700; color: var(--text); }
+.co-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.paid-badge {
+  font-size: 12px; font-weight: 600; padding: 4px 12px;
+  background: var(--green-soft); color: var(--green);
+  border: 1px solid var(--green); border-radius: 20px;
+}
+.payslip-meta {
+  display: flex; gap: 32px; flex-wrap: wrap; padding: 16px 24px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 3px; }
+.meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+.meta-val   { font-size: 13px; font-weight: 500; color: var(--text); }
+.meta-val.mono { font-family: monospace; font-size: 12px; }
+.divider { height: 1px; background: var(--border); margin: 0; }
+.components-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  padding: 20px 24px; gap: 24px;
+}
+@media (max-width: 560px) { .components-grid { grid-template-columns: 1fr; } }
+.comp-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; }
+.comp-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+.comp-amt { font-weight: 500; }
+.totals { padding: 16px 24px; background: var(--bg-card2); }
+.total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: var(--text-sub); }
+.net-row   { display: flex; justify-content: space-between; padding: 10px 0; font-size: 15px; font-weight: 700; color: var(--text); border-top: 2px solid var(--border); margin-top: 8px; }
+.red   { color: var(--red); }
+.green { color: var(--green); }
+.payslip-actions { padding: 16px 24px; border-top: 1px solid var(--border); }
+.btn-download {
+  padding: 9px 18px; background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text);
+}
+.btn-download:hover { background: var(--border); }

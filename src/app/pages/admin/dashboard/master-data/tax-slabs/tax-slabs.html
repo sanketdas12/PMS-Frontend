@@ -1,0 +1,144 @@
+<div class="tax-slabs-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2>Tax Slabs</h2>
+      <p class="subtitle">Manage income tax slabs by financial year</p>
+    </div>
+    <button class="btn-primary" (click)="openAddForm()">+ Add Tax Slab</button>
+  </div>
+
+  <!-- Banners -->
+  <div class="alert alert-success" *ngIf="successMessage">✓ {{ successMessage }}</div>
+  <div class="alert alert-error" *ngIf="errorMessage && !showForm">✕ {{ errorMessage }}</div>
+
+  <!-- Filter by financial year -->
+  <div class="filter-bar">
+    <label>Filter by Financial Year:</label>
+    <input
+      [(ngModel)]="filterYear"
+      [ngModelOptions]="{standalone: true}"
+      placeholder="e.g. 2024-25"
+      class="filter-input"
+    />
+    <button class="btn-secondary" (click)="applyFilter()">Apply</button>
+    <button class="btn-secondary" (click)="filterYear = ''; loadAll()">Clear</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div><span>Loading…</span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper" *ngIf="!isLoading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Financial Year</th>
+          <th>Min Income (₹)</th>
+          <th>Max Income (₹)</th>
+          <th>Tax %</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of taxSlabs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.financialYear }}</td>
+          <td>{{ item.minIncome | number }}</td>
+          <td>{{ item.maxIncome | number }}</td>
+          <td>{{ item.taxPercentage }}%</td>
+          <td>
+            <span [class]="item.isActive ? 'badge badge-active' : 'badge badge-inactive'">
+              {{ item.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-edit" (click)="onEdit(item.id!)">Edit</button>
+            <button class="btn-delete" (click)="onDelete(item.id!)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="taxSlabs.length === 0">
+          <td colspan="7" class="empty-state">No tax slabs found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Edit' : 'Add' }} Tax Slab</h3>
+        <button class="btn-close" (click)="closeForm()">✕</button>
+      </div>
+
+      <div class="alert alert-error modal-error" *ngIf="errorMessage">✕ {{ errorMessage }}</div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Financial Year <span class="required">*</span></label>
+          <input
+            formControlName="financialYear"
+            placeholder="e.g. 2024-25"
+            [class.input-error]="form.get('financialYear')?.invalid && form.get('financialYear')?.touched"
+          />
+          <span class="field-error" *ngIf="form.get('financialYear')?.invalid && form.get('financialYear')?.touched">
+            Financial year is required
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Min Income (₹) <span class="required">*</span></label>
+            <input
+              type="number"
+              formControlName="minIncome"
+              [class.input-error]="form.get('minIncome')?.invalid && form.get('minIncome')?.touched"
+            />
+            <span class="field-error" *ngIf="form.get('minIncome')?.invalid && form.get('minIncome')?.touched">
+              Valid min income required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Max Income (₹) <span class="required">*</span></label>
+            <input
+              type="number"
+              formControlName="maxIncome"
+              [class.input-error]="form.get('maxIncome')?.invalid && form.get('maxIncome')?.touched"
+            />
+            <span class="field-error" *ngIf="form.get('maxIncome')?.invalid && form.get('maxIncome')?.touched">
+              Valid max income required
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tax Percentage (%) <span class="required">*</span></label>
+          <input
+            type="number"
+            formControlName="taxPercentage"
+            min="0"
+            max="100"
+            [class.input-error]="form.get('taxPercentage')?.invalid && form.get('taxPercentage')?.touched"
+          />
+          <span class="field-error" *ngIf="form.get('taxPercentage')?.invalid && form.get('taxPercentage')?.touched">
+            Tax % must be between 0 and 100
+          </span>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Update' : 'Save' }} Slab
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
