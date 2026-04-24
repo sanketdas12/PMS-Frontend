@@ -40,9 +40,10 @@ export class HrEmployeesComponent implements OnInit {
 
   search() {
     const q = this.searchQuery.toLowerCase();
-    this.filtered = this.employees.filter(e =>
-      `${e.firstName} ${e.lastName} ${e.email} ${e.department ?? ''}`.toLowerCase().includes(q)
-    );
+    this.filtered = this.employees.filter(e => {
+      const dept = typeof e.department === 'string' ? e.department : (e.department?.deptName ?? '');
+      return `${e.firstName} ${e.lastName} ${e.email} ${dept}`.toLowerCase().includes(q);
+    });
   }
 
   openModal() {

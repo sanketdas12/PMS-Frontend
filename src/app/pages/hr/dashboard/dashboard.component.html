@@ -100,13 +100,12 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Name</th><th>Email</th><th>Department</th><th>Status</th></tr>
+          <tr><th>Name</th><th>Email</th><th>Status</th></tr>
         </thead>
         <tbody>
           <tr *ngFor="let emp of employees.slice(0,6)">
             <td class="name-cell">{{ emp.firstName }} {{ emp.lastName }}</td>
             <td class="muted">{{ emp.email }}</td>
-            <td>{{ emp.department ?? '—' }}</td>
             <td>
               <span class="pill" [ngClass]="emp.status === 'INACTIVE' ? 'pill-amber' : 'pill-green'">
                 {{ emp.status ?? 'Active' }}

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin, of } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
-import { EmployeeService, Employee } from '../../../core/services/employee.service';
+import { EmployeeService, Employee, Department, Designation } from '../../../core/services/employee.service';
 import { EmpPayStructureService, EmpPayStructureResponse } from '../../../core/services/emp-pay-structure.service';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
@@ -37,32 +37,60 @@ export class EmployeeProfileComponent implements OnInit {
     return this.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'ME';
   }
 
-  ngOnInit() {
-    if (!this.empId) {
-      this.error = 'Profile not found. Please contact HR.';
-      return;
-    }
+  deptLabel(): string {
+    const d = this.emp?.department;
+    if (!d || (typeof d === 'object' && Object.keys(d).length === 0)) return '—';
+    return typeof d === 'string' ? d : (d.deptName ?? '—');
+  }
 
+  designationLabel(): string {
+    const d = this.emp?.designation;
+    if (!d || (typeof d === 'object' && Object.keys(d).length === 0)) return '—';
+    return typeof d === 'string' ? d : (d.title ?? '—');
+  }
+
+  statusLabel(): string {
+    if (!this.emp) return '—';
+    const s = this.emp.status;
+    if (s) return s;
+    return this.emp.isActive === false ? 'Inactive' : 'Active';
+  }
+
+  noticeLabel(): string {
+    const n = this.emp?.noticePeriod;
+    return n != null ? `${n} days` : '—';
+  }
+
+  ngOnInit() {
     this.loading = true;
     this.error = '';
 
-    forkJoin({
-      emp: this.empService.getById(this.empId).pipe(
-        catchError(() => of(null))
-      ),
-      assign: this.assignService.getByEmpId(this.empId).pipe(
-        catchError(() => of(null))
-      )
-    }).subscribe({
-      next: ({ emp, assign }) => {
-        this.emp = emp?.data ?? null;
-        this.assign = assign?.data ?? null;
+    this.empService.getAll().subscribe({
+      next: (res: any) => {
+        const allEmployees: Employee[] = Array.isArray(res) ? res : (res.data ?? []);
+        // Match logged-in employee by email (most reliable)
+        this.emp = allEmployees.find(e => e.email === this.email) ?? null;
 
         if (!this.emp) {
           this.error = 'Profile not found. Please contact HR.';
+          this.loading = false;
+          return;
         }
 
-        this.loading = false;
+        this.empId = this.emp.empId;
+        this.name = `${this.emp.firstName ?? ''} ${this.emp.lastName ?? ''}`.trim();
+
+        this.assignService.getByEmpId(this.empId).pipe(
+          catchError(() => of(null))
+        ).subscribe({
+          next: (assign: any) => {
+            this.assign = assign?.data ?? null;
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          }
+        });
       },
       error: () => {
         this.error = 'Could not load profile. Please try again.';

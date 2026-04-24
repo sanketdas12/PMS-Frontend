@@ -94,6 +94,17 @@ export class EmployeeRevisionComponent implements OnInit, OnDestroy {
         this.errorMsg = 'Unable to load revision types.';
       }
     });
+
+    this.employeeRevisionService.getAll().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (revs) => {
+        this.revisions = Array.isArray(revs) ? revs : [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMsg = 'Unable to load revision records.';
+        this.isLoading = false;
+      }
+    });
   }
 
   getEmployeeName(employee: Employee): string {
@@ -156,11 +167,11 @@ export class EmployeeRevisionComponent implements OnInit, OnDestroy {
 
     this.employeeRevisionService.create(payload).pipe(takeUntil(this.destroy$)).subscribe({
       next: (created) => {
-        this.successMsg = `Revision recorded for ${this.getEmployeeName(this.employees.find(e => e.empId === created.empId) ?? { empId: '', firstName: '', lastName: '', email: '' })}`;
+        this.successMsg = `Revision recorded for ${created.employeeName || this.getEmployeeName(this.employees.find(e => e.empId === created.empId) ?? { empId: '', firstName: '', lastName: '', email: '' })}`;
         this.revisions.unshift({
           ...created,
-          revisionName: this.getRevisionName(created.revisionId),
-          email: this.getEmailForEmpId(created.empId)
+          revisionName: created.revisionName || this.getRevisionName(created.revisionId),
+          email: created.email || this.getEmailForEmpId(created.empId)
         });
         this.resetForm();
         this.isSubmitting = false;

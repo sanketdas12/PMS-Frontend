@@ -29,6 +29,15 @@ export class EmployeeRevisionService {
 
   constructor(private http: HttpClient) {}
 
+  getAll(): Observable<EmployeeRevision[]> {
+    return this.http.get<EmployeeRevision[]>(this.baseUrl).pipe(
+      catchError((err) => {
+        console.error('Error fetching employee revisions:', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
   create(request: CreateRevisionRequest): Observable<EmployeeRevision> {
     return this.http.post<EmployeeRevision>(this.baseUrl, request).pipe(
       catchError((err) => {

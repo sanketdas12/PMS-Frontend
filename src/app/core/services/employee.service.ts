@@ -3,17 +3,53 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, shareReplay, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+export interface Department {
+  id: string;
+  deptName: string;
+  description?: string;
+  isActive?: boolean;
+  createdOn?: string;
+  createdBy?: string;
+  updatedOn?: string;
+  updatedBy?: string;
+}
+
+export interface Designation {
+  id: string;
+  title: string;
+  isActive?: boolean;
+  description?: string;
+  createdAt?: string;
+  createdBy?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
 export interface Employee {
   empId: string;
   firstName: string;
   lastName: string;
   email: string;
-  department?: string;
-  designation?: string;
+  phone?: string;
+  address?: string;
+  department?: Department | string;
+  designation?: Designation | string;
   employmentType?: string;
   status?: string;
   joiningDate?: string;
-  phone?: string;
+  joinDate?: string;
+  panNum?: string;
+  aadharNum?: string;
+  passportNum?: string;
+  offerLetterNum?: string;
+  releaseDate?: string | null;
+  reportingManager?: string | null;
+  noticePeriod?: number;
+  isActive?: boolean;
+  createdOn?: string;
+  updatedOn?: string;
+  createdBy?: string | null;
+  updatedBy?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })

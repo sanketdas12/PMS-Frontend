@@ -1,19 +1,16 @@
-# Payroll Loading Property Update TODO
+# Update Employee Profile Employee Console
 
-## Plan Steps (7 files total) - ✅ ALL COMPLETED
+## Plan
+1. Fix TypeScript strict errors in `employee-profile.component.html` by moving department/designation logic into TS component methods.
+2. Remove unused `forkJoin` import from `employee-profile.component.ts`.
+3. Make Status badge dynamic using `emp?.status` / `emp?.isActive` instead of hard-coded "Active".
+4. Add "days" suffix to Notice Period for readability.
+5. Run `ng build` to verify zero errors.
 
-- [x] Edit src/app/auth/login/login.component.ts: Replace "  loading = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/admin/assign-pay/assign-pay.component.ts: Replace "  loading     = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/employee/payslip/employee-payslip.component.ts: Replace "  loading       = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/hr/payslip/hr-payslip.component.ts: Replace "  loading = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/hr/assign-pay/hr-assign-pay.component.ts: Replace "  loading     = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/admin/payroll-reports/reports.component.ts: Replace "  loading        = false;" → "  loading: boolean | null = null;"
-- [x] Edit src/app/pages/admin/payslip/payslip.ts: Replace "  loading = false;" → "  loading: boolean | null = null;"
+## Progress
+- [ ] Fix `deptName` / `title` strict type errors in template
+- [ ] Remove unused `forkJoin` import
+- [ ] Make Status badge dynamic
+- [ ] Format Notice Period
+- [ ] Build verification
 
-## Follow-up:
-- [x] Run `ng build` to verify no TypeScript errors.
-- [x] Test components load without regressions.
-
-**All 7 files updated successfully.** No other src/*.ts files had class-level 'loading = true/false;' declarations matching criteria.
-
-Updated by BLACKBOXAI

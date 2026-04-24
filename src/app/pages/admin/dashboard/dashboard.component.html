@@ -58,7 +58,7 @@
       <span class="qc-arrow">→</span>
     </a>
 
-    <a class="quick-card" routerLink="/admin/process-payroll">
+    <!-- <a class="quick-card" routerLink="/admin/process-payroll">
       <div class="qc-icon process">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="10" cy="10" r="7"/><path d="M7 10l2 2 4-4"/>
@@ -69,7 +69,7 @@
         <div class="qc-sub">Initiate &amp; process payroll cycle</div>
       </div>
       <span class="qc-arrow">→</span>
-    </a>
+    </a> -->
 
   </div>
 
@@ -85,7 +85,7 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Department</th>
+            <!-- <th>Department</th> -->
             <th>Status</th>
           </tr>
         </thead>
@@ -93,7 +93,7 @@
           <tr *ngFor="let emp of employees.slice(0,6)">
             <td class="name-cell">{{ emp.firstName }} {{ emp.lastName }}</td>
             <td class="muted">{{ emp.email }}</td>
-            <td>{{ emp.department ?? '—' }}</td>
+            <!-- <td>{{ emp.department ?? '—' }}</td> -->
             <td>
               <span class="pill" [ngClass]="emp.status === 'INACTIVE' ? 'pill-amber' : 'pill-green'">
                 {{ emp.status ?? 'Active' }}

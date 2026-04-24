@@ -46,7 +46,7 @@
       <div class="summary-meta">
         <div class="meta-chip">
           <span class="meta-chip-label">Status</span>
-          <span class="active-badge">Active</span>
+          <span class="active-badge">{{ statusLabel() }}</span>
         </div>
         <div class="meta-chip">
           <span class="meta-chip-label">Employee ID</span>
@@ -61,23 +61,31 @@
         <div class="info-grid">
           <div class="detail-item">
             <span class="detail-label">First Name</span>
-            <span class="detail-val">{{ emp?.firstName ?? (name.split(' ')[0] ? name.split(' ')[0] : '—') }}</span>
+            <span class="detail-val">{{ emp?.firstName ?? '—' }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Last Name</span>
-            <span class="detail-val">{{ emp?.lastName ?? (name.split(' ')[1] ? name.split(' ')[1] : '—') }}</span>
+            <span class="detail-val">{{ emp?.lastName ?? '—' }}</span>
           </div>
           <div class="detail-item detail-item-wide">
             <span class="detail-label">Email</span>
-            <span class="detail-val">{{ emp?.email ?? email }}</span>
+            <span class="detail-val">{{ emp?.email ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Phone</span>
+            <span class="detail-val">{{ emp?.phone ?? '—' }}</span>
+          </div>
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Address</span>
+            <span class="detail-val">{{ emp?.address ?? '—' }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Department</span>
-            <span class="detail-val">{{ emp?.department ?? '—' }}</span>
+            <span class="detail-val">{{ deptLabel() }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Designation</span>
-            <span class="detail-val">{{ emp?.designation ?? '—' }}</span>
+            <span class="detail-val">{{ designationLabel() }}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Employment Type</span>
@@ -85,7 +93,27 @@
           </div>
           <div class="detail-item">
             <span class="detail-label">Joining Date</span>
-            <span class="detail-val">{{ emp?.joiningDate ?? '—' }}</span>
+            <span class="detail-val">{{ emp?.joinDate ?? emp?.joiningDate ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">PAN Number</span>
+            <span class="detail-val">{{ emp?.panNum ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Aadhar Number</span>
+            <span class="detail-val">{{ emp?.aadharNum ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Passport Number</span>
+            <span class="detail-val">{{ emp?.passportNum ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Offer Letter Number</span>
+            <span class="detail-val">{{ emp?.offerLetterNum ?? '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Notice Period</span>
+            <span class="detail-val">{{ noticeLabel() }}</span>
           </div>
         </div>
       </div>

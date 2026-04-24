@@ -61,7 +61,7 @@
       <tbody>
         <tr *ngFor="let revision of revisions">
           <td>{{ revision.empId }}</td>
-          <td>{{ getEmployeeName(employees.find(e => e.empId === revision.empId) ?? { empId: '', firstName: '', lastName: '', email: '' }) }}</td>
+          <td>{{ revision.employeeName || getEmployeeName(employees.find(e => e.empId === revision.empId) ?? { empId: '', firstName: '', lastName: '', email: '' }) }}</td>
           <td>{{ revision.email || getEmailForEmpId(revision.empId) }}</td>
           <td>{{ revision.revisionName || getRevisionName(revision.revisionId) }}</td>
           <td>{{ revision.month }}</td>

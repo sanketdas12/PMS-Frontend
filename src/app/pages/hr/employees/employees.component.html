@@ -7,7 +7,7 @@
   </div>
 
   <div class="toolbar">
-    <input class="search-input" type="text" placeholder="Search by name, email, department…"
+    <input class="search-input" type="text" placeholder="Search by name, email…"
       [(ngModel)]="searchQuery" (ngModelChange)="search()" />
   </div>
 
@@ -28,8 +28,6 @@
             <th>#</th>
             <th>Employee</th>
             <th>Email</th>
-            <th>Department</th>
-            <th>Designation</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -43,12 +41,10 @@
               </div>
             </td>
             <td class="muted">{{ emp.email }}</td>
-            <td>{{ emp.department ?? '—' }}</td>
-            <td>{{ emp.designation ?? '—' }}</td>
             <td><span class="pill" [ngClass]="statusClass(emp.status)">{{ emp.status ?? 'Active' }}</span></td>
           </tr>
           <tr *ngIf="filtered.length === 0">
-            <td colspan="6" class="empty-row">No employees found.</td>
+            <td colspan="4" class="empty-row">No employees found.</td>
           </tr>
         </tbody>
       </table>
@@ -80,16 +76,7 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Department</label>
-          <input type="text" [(ngModel)]="form.department" placeholder="Engineering" />
-        </div>
-        <div class="form-group">
-          <label>Designation</label>
-          <input type="text" [(ngModel)]="form.designation" placeholder="Senior Engineer" />
-        </div>
-      </div>
+
     </div>
 
     <p class="save-msg" *ngIf="saveMsg">{{ saveMsg }}</p>

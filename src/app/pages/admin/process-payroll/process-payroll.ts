@@ -159,7 +159,7 @@ export class ProcessPayrollComponent implements OnInit, OnDestroy {
             console.log('[Payroll] Step 5: Payroll completed!');
             this.clearPolling();
             this.clearPollTimeout();
-            this.salaryService.clearCache();
+            // this.salaryService.clearCache();
             this.payrollReportService.clearCache();
             this.step = 'done';
             this.history.unshift({
