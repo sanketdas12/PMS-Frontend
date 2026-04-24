@@ -23,16 +23,6 @@ export const routes: Routes = [
       { path: 'assign-pay',      loadComponent: () => import('./pages/admin/assign-pay/assign-pay.component').then(m => m.AssignPayComponent) },
       { path: 'process-payroll', loadComponent: () => import('./pages/admin/process-payroll/process-payroll').then(m => m.ProcessPayrollComponent) },
 
-      // Payroll Revisions with children
-      {
-        path: 'payroll-revisions',
-        loadComponent: () => import('./pages/admin/payroll-revisions/payroll-revisions').then(m => m.PayrollRevisionsComponent),
-        children: [
-          { path: 'revision-history',  loadComponent: () => import('./pages/admin/payroll-revisions/revision-history/revision-history').then(m => m.RevisionHistory) },
-          { path: '', redirectTo: 'revision-history', pathMatch: 'full' }
-        ]
-      },
-
       // Payslip with children
       {
         path: 'payslip',

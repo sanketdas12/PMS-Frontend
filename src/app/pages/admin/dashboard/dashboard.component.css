@@ -113,6 +113,33 @@
   font-weight: 600;
 }
 
+.empty-table {
+  display: flex;
+  justify-content: center;
+}
+
+.empty-table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  max-width: 520px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(13,27,46,0.08);
+}
+
+.empty-table-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.empty-table-card p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 /* ── Metrics ── */
 .metrics-grid {
   display: grid;
@@ -169,7 +196,7 @@
 /* ── Quick Links ── */
 .quick-links {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 

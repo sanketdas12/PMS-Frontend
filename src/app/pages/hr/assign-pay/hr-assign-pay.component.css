@@ -3,17 +3,23 @@
 .page-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px; }
 .page-sub   { font-size: 13px; color: var(--muted); margin: 0; }
 .page-sub code { background: var(--bg-card2); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
-
 .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; }
 .assign-card { padding: 24px; }
 .section-title { font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 20px; }
 .card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
 .card-title  { font-size: 14px; font-weight: 600; color: var(--text); }
-
 .state-msg { color: var(--muted); font-size: 14px; }
 
-.assign-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end; }
-@media (max-width: 680px) { .assign-form { grid-template-columns: 1fr; } }
+.assign-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: flex-end;
+}
+@media (max-width: 680px) {
+  .assign-form { grid-template-columns: 1fr; }
+}
+
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 .form-group label { font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; }
 .form-group select {
@@ -21,6 +27,16 @@
   font-size: 13px; color: var(--text); background: var(--bg-card); outline: none; cursor: pointer;
 }
 .form-group select:focus { border-color: var(--accent); }
+
+.btn-group label {
+  display: block;
+  visibility: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+.btn-group .btn-primary { width: 100%; }
+
 .btn-primary {
   padding: 9px 18px; background: #16a34a; color: #fff; border: none;
   border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;

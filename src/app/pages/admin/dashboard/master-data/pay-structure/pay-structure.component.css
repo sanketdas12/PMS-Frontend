@@ -112,16 +112,9 @@ tbody tr:hover td { background: #fafbfc; }
 
 /* Action buttons */
 .actions { display: flex; align-items: center; gap: 6px; }
-.btn-icon {
-  width: 28px; height: 28px; padding: 0; border-radius: 6px; border: 1px solid;
-  display: flex; align-items: center; justify-content: center;
-  line-height: 0; cursor: pointer; transition: all 0.15s;
-}
-.btn-icon svg {
-  width: 14px;
-  height: 14px;
-  display: block;
-  flex-shrink: 0;
+.btn-text {
+  padding: 5px 10px; border-radius: 6px; border: 1px solid;
+  font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s;
 }
 .btn-edit   { background: #fffbeb; border-color: #fde68a; color: #92400e; }
 .btn-edit:hover   { background: #fef3c7; border-color: #f59e0b; }

@@ -15,7 +15,7 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
 export class AdminDashboardComponent implements OnInit {
   employees: Employee[] = [];
   assignments: EmpPayStructureResponse[] = [];
-  loading: boolean | null = null;
+  loading = true;
   error = '';
 
   get totalEmployees()  { return this.employees.length; }

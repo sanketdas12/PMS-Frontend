@@ -99,16 +99,8 @@
             </td>
             <td>
               <div class="actions">
-                <button class="btn-icon btn-edit" (click)="onEdit(item.id!)" title="Edit">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
-                    <path d="M11 2l3 3-8 8H3v-3l8-8z"/>
-                  </svg>
-                </button>
-                <button class="btn-icon btn-delete" (click)="onDelete(item.id!)" title="Delete">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
-                    <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/>
-                  </svg>
-                </button>
+                <button class="btn-text btn-edit" (click)="onEdit(item.id!)" title="Edit">Edit</button>
+                <button class="btn-text btn-delete" (click)="onDelete(item.id!)" title="Delete">Delete</button>
               </div>
             </td>
           </tr>

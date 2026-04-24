@@ -6,7 +6,17 @@
 
 .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
 .filter-card { padding: 20px; margin-bottom: 20px; }
-.filter-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end; }
+.filter-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.filter-form .btn-primary {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
 @media (max-width: 680px) { .filter-form { grid-template-columns: 1fr; } }
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 .form-group label { font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; }

@@ -2,10 +2,7 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Admin Dashboard</h1>
-      <p class="page-sub">Workforce & payroll overview</p>
-    </div>
-    <div class="header-actions">
-      <a class="btn-primary" routerLink="/admin/employees">+ Add Employee</a>
+      <p class="page-sub">A clean operational view for payroll, employees and approvals</p>
     </div>
   </div>
 
@@ -105,6 +102,14 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="empty-table" *ngIf="!loading && !error && employees.length === 0">
+    <div class="empty-table-card">
+      <h3>No employees found yet</h3>
+      <p>Start by adding employees or importing the first payroll batch.</p>
+      <a routerLink="/admin/employees" class="btn-primary">Add first employee</a>
     </div>
   </div>
 </div>
