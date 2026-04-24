@@ -21,11 +21,11 @@ export interface PayrollRunResponse {
 
 export interface PayrollStatusResponse {
   data: {
-    payRollDetailsId: string;
-    status: string;
-    month: number;
-    year: number;
-  };
+    payRollDetailsId?: string;
+    status?: string;
+    month?: number;
+    year?: number;
+  } | string;
   message: string;
 }
 

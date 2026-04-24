@@ -26,6 +26,7 @@ export class AdminSidebarComponent {
     {
       title: 'Payroll',
       items: [
+        { label: 'Process Payroll', path: '/admin/process-payroll', icon: 'process' },
         { label: 'Revision History', path: '/admin/payroll-revisions/revision-history', icon: 'revision' },
         { label: 'Employee Payslip', path: '/admin/payslip/employee', icon: 'payslip' }
       ]

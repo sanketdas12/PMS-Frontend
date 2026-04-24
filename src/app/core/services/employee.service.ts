@@ -20,13 +20,19 @@ export interface Employee {
 export class EmployeeService {
   private baseUrl = `${environment.apiUrl}/employees`;
   private allEmployees$?: Observable<{ data: Employee[]; message: string }>;
+  private employeeByIdCache = new Map<string, Observable<{ data: Employee; message: string }>>();
 
   constructor(private http: HttpClient) {}
 
   getAll(forceRefresh = false): Observable<{ data: Employee[]; message: string }> {
     if (!this.allEmployees$ || forceRefresh) {
+      console.log('Fetching employee data from API:', this.baseUrl);
       this.allEmployees$ = this.http.get<{ data: Employee[]; message: string }>(this.baseUrl).pipe(
+        tap((response) => {
+          console.log('Employee API response:', response);
+        }),
         catchError((err) => {
+          console.error('Error fetching employee data:', err);
           this.clearCache();
           return throwError(() => err);
         }),
@@ -37,8 +43,26 @@ export class EmployeeService {
     return this.allEmployees$;
   }
 
-  getById(id: string): Observable<{ data: Employee; message: string }> {
-    return this.http.get<{ data: Employee; message: string }>(`${this.baseUrl}/${id}`);
+  getById(id: string, forceRefresh = false): Observable<{ data: Employee; message: string }> {
+    if (forceRefresh) {
+      this.employeeByIdCache.delete(id);
+    }
+
+    const cached = this.employeeByIdCache.get(id);
+    if (cached) {
+      return cached;
+    }
+
+    const request$ = this.http.get<{ data: Employee; message: string }>(`${this.baseUrl}/${id}`).pipe(
+      catchError((err) => {
+        this.employeeByIdCache.delete(id);
+        return throwError(() => err);
+      }),
+      shareReplay(1)
+    );
+
+    this.employeeByIdCache.set(id, request$);
+    return request$;
   }
 
   create(emp: Partial<Employee>): Observable<any> {
@@ -61,5 +85,6 @@ export class EmployeeService {
 
   private clearCache(): void {
     this.allEmployees$ = undefined;
+    this.employeeByIdCache.clear();
   }
 }

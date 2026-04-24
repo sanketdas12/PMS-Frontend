@@ -74,6 +74,8 @@ export const routes: Routes = [
       { path: 'dashboard',       loadComponent: () => import('./pages/hr/dashboard/dashboard.component').then(m => m.HrDashboardComponent) },
       { path: 'employees',       loadComponent: () => import('./pages/hr/employees/employees.component').then(m => m.HrEmployeesComponent) },
       { path: 'assign-pay',      loadComponent: () => import('./pages/hr/assign-pay/hr-assign-pay.component').then(m => m.HrAssignPayComponent) },
+      { path: 'emp-ctc',         loadComponent: () => import('./pages/hr/emp-ctc/emp-ctc.component').then(m => m.EmpCtcComponent) },
+      { path: 'emp-revision',    loadComponent: () => import('./pages/hr/employee-revision/employee-revision.component').then(m => m.EmployeeRevisionComponent) },
       { path: 'payslip',         loadComponent: () => import('./pages/hr/payslip/hr-payslip.component').then(m => m.HrPayslipComponent) },
       { path: 'process-payroll', loadComponent: () => import('./pages/admin/process-payroll/process-payroll').then(m => m.ProcessPayrollComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

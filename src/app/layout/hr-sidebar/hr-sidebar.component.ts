@@ -14,6 +14,8 @@ export class HrSidebarComponent {
     { label: 'Dashboard',       path: '/hr/dashboard',       icon: 'dashboard' },
     { label: 'Employees',       path: '/hr/employees',       icon: 'employees' },
     { label: 'Assign Pay',      path: '/hr/assign-pay',      icon: 'assign' },
+    { label: 'Employee CTC',    path: '/hr/emp-ctc',         icon: 'ctc' },
+    { label: 'Employee Revision', path: '/hr/emp-revision',    icon: 'revision' },
     { label: 'Process Payroll', path: '/hr/process-payroll', icon: 'process' },
     { label: 'Payslips',        path: '/hr/payslip',         icon: 'payslip' },
   ];

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { SalaryService, SalaryResponse } from '../../../core/services/salary.service';
-import { EmployeeService, Employee } from '../../../core/services/employee.service';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
@@ -21,7 +20,6 @@ export class EmployeePayslipComponent implements OnInit {
   selectedYear  = new Date().getFullYear();
   salary: SalaryResponse | null = null;
   loading: boolean | null = null;
-  initializing  = true;
   error         = '';
 
   months = [
@@ -33,31 +31,14 @@ export class EmployeePayslipComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private salaryService: SalaryService,
-    private empService: EmployeeService
+    private salaryService: SalaryService
   ) {
     this.name  = authService.getName()  ?? 'Employee';
     this.email = authService.getEmail() ?? '';
     this.empId = authService.getEmpId() ?? '';
   }
 
-  ngOnInit() {
-    // Resolve real empId by email
-    this.empService.getAll().subscribe({
-      next: res => {
-        const all: Employee[] = res.data ?? (res as any);
-        const found = all.find(e => e.email?.toLowerCase() === this.email?.toLowerCase())
-                   ?? all.find(e => e.empId === this.empId);
-        if (found) this.empId = found.empId;
-        this.initializing = false;
-        this.fetch();
-      },
-      error: () => {
-        this.initializing = false;
-        if (this.empId) this.fetch();
-      }
-    });
-  }
+  ngOnInit() {}
 
   fetch() {
     if (!this.empId) { this.error = 'Employee ID not found. Please log in again.'; return; }
@@ -79,4 +60,3 @@ export class EmployeePayslipComponent implements OnInit {
   deductions() { return this.salary?.components.filter(c => c.compType === 'DEDUCTION') ?? []; }
   monthLabel() { return this.months.find(m => m.v === this.selectedMonth)?.l ?? ''; }
 }
-

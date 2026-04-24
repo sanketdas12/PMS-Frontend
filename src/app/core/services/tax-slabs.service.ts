@@ -16,7 +16,7 @@ export interface TaxSlab {
 export class TaxSlabService {
 
   private baseUrl = `${environment.apiUrl}/tax-slabs`;
-  private allTaxSlabs$?: Observable<TaxSlab[]>;
+  private taxSlabsByFinancialYear = new Map<string, Observable<TaxSlab[]>>();
 
   constructor(private http: HttpClient) {}
 
@@ -40,12 +40,27 @@ export class TaxSlabService {
 
     getAll(financialYear?: string, forceRefresh = false): Observable<TaxSlab[]> {
     if (financialYear) {
-      // always fresh, no cache needed for parameterized calls
-      return this.http.get<TaxSlab[]>(`${this.baseUrl}?financialYear=${financialYear}`);
+      if (forceRefresh) {
+        this.taxSlabsByFinancialYear.delete(financialYear);
+      }
+
+      const cached = this.taxSlabsByFinancialYear.get(financialYear);
+      if (cached) {
+        return cached;
+      }
+
+      const request$ = this.http.get<TaxSlab[]>(`${this.baseUrl}?financialYear=${financialYear}`).pipe(
+        catchError((err) => {
+          this.taxSlabsByFinancialYear.delete(financialYear);
+          return throwError(() => err);
+        }),
+        shareReplay(1)
+      );
+
+      this.taxSlabsByFinancialYear.set(financialYear, request$);
+      return request$;
     }
 
-    // if no financialYear, you're hitting a 401 — either always require it,
-    // or fall back to a default year. Best option:
     throw new Error('financialYear is required to fetch tax slabs');
   }
 
@@ -72,6 +87,6 @@ export class TaxSlabService {
   }
 
   private clearCache(): void {
-    this.allTaxSlabs$ = undefined;
+    this.taxSlabsByFinancialYear.clear();
   }
 }

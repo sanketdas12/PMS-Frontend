@@ -1,0 +1,73 @@
+<section class="revision-page">
+  <header class="revision-header">
+    <h1>Employee Revision</h1>
+    <p>Record salary revisions by employee, month, year and revision type.</p>
+  </header>
+
+  <form class="revision-form" (ngSubmit)="submitRevision()">
+    <div class="field-row">
+      <label for="employee">Employee</label>
+      <select id="employee" name="employee" [(ngModel)]="selectedEmployeeId">
+        <option value="">Select employee</option>
+        <option *ngFor="let emp of employees" [value]="emp.empId">{{ getEmployeeName(emp) }} ({{ emp.email }})</option>
+      </select>
+    </div>
+
+    <div class="field-row">
+      <label for="revisionType">Revision Type</label>
+      <select id="revisionType" name="revisionType" [(ngModel)]="selectedRevisionTypeId">
+        <option value="">Select revision type</option>
+        <option *ngFor="let type of revisionTypes" [value]="type.id">{{ type.revisionName }}</option>
+      </select>
+    </div>
+
+    <div class="field-row split-row">
+      <div>
+        <label for="month">Month</label>
+        <input id="month" name="month" type="number" min="1" max="12" [(ngModel)]="month" placeholder="1-12" />
+      </div>
+      <div>
+        <label for="year">Year</label>
+        <input id="year" name="year" type="number" min="2000" [(ngModel)]="year" placeholder="2025" />
+      </div>
+    </div>
+
+    <div class="field-row">
+      <label for="amount">Revision Amount</label>
+      <input id="amount" name="amount" type="number" min="0" step="0.01" [(ngModel)]="amount" placeholder="Enter amount" />
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Saving...' : 'Create Revision' }}</button>
+    </div>
+
+    <div class="feedback" *ngIf="errorMsg" role="alert">{{ errorMsg }}</div>
+    <div class="feedback success" *ngIf="successMsg">{{ successMsg }}</div>
+  </form>
+
+  <section class="revision-output" *ngIf="revisions.length > 0">
+    <h2>Revision Records</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Emp ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Revision</th>
+          <th>Month</th>
+          <th>Year</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let revision of revisions">
+          <td>{{ revision.empId }}</td>
+          <td>{{ getEmployeeName(employees.find(e => e.empId === revision.empId) ?? { empId: '', firstName: '', lastName: '', email: '' }) }}</td>
+          <td>{{ revision.email || getEmailForEmpId(revision.empId) }}</td>
+          <td>{{ revision.revisionName || getRevisionName(revision.revisionId) }}</td>
+          <td>{{ revision.month }}</td>
+          <td>{{ revision.year }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

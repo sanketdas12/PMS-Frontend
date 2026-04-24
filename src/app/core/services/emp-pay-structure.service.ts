@@ -18,6 +18,7 @@ export interface EmpPayStructureResponse {
 export class EmpPayStructureService {
   private baseUrl = `${environment.apiUrl}/emp-pay-structure`;
   private allAssignments$?: Observable<{ data: EmpPayStructureResponse[]; message: string }>;
+  private assignmentsByEmpId = new Map<string, Observable<{ data: EmpPayStructureResponse; message: string }>>();
 
   constructor(private http: HttpClient) {}
 
@@ -41,8 +42,26 @@ export class EmpPayStructureService {
     return this.allAssignments$;
   }
 
-  getByEmpId(empId: string): Observable<{ data: EmpPayStructureResponse; message: string }> {
-    return this.http.get<{ data: EmpPayStructureResponse; message: string }>(`${this.baseUrl}/${empId}`);
+  getByEmpId(empId: string, forceRefresh = false): Observable<{ data: EmpPayStructureResponse; message: string }> {
+    if (forceRefresh) {
+      this.assignmentsByEmpId.delete(empId);
+    }
+
+    const cached = this.assignmentsByEmpId.get(empId);
+    if (cached) {
+      return cached;
+    }
+
+    const request$ = this.http.get<{ data: EmpPayStructureResponse; message: string }>(`${this.baseUrl}/${empId}`).pipe(
+      catchError((err) => {
+        this.assignmentsByEmpId.delete(empId);
+        return throwError(() => err);
+      }),
+      shareReplay(1)
+    );
+
+    this.assignmentsByEmpId.set(empId, request$);
+    return request$;
   }
 
   update(id: string, data: Partial<EmpPayStructureAssign>): Observable<any> {
@@ -59,5 +78,6 @@ export class EmpPayStructureService {
 
   private clearCache(): void {
     this.allAssignments$ = undefined;
+    this.assignmentsByEmpId.clear();
   }
 }

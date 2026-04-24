@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
 import { EmployeeService, Employee } from '../../../core/services/employee.service';
 import { EmpPayStructureService, EmpPayStructureResponse } from '../../../core/services/emp-pay-structure.service';
@@ -36,29 +38,34 @@ export class EmployeeProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Load all employees and find by email (since empId in localStorage is user UUID)
-    this.empService.getAll().subscribe({
-      next: res => {
-        const all: Employee[] = res.data ?? (res as any);
-        // Match by email first, then fallback to empId match
-        const found = all.find(e => e.email?.toLowerCase() === this.email?.toLowerCase())
-                   ?? all.find(e => e.empId === this.empId);
-        if (found) {
-          this.emp   = found;
-          this.empId = found.empId; // use the real empId
-          this.loading = false;
-          // Now load pay assignment with the real empId
-          this.assignService.getByEmpId(found.empId).subscribe({
-            next: r => { this.assign = r.data ?? (r as any); },
-            error: () => {}
-          });
-        } else {
-          this.error   = 'Profile not found. Please contact HR.';
-          this.loading = false;
+    if (!this.empId) {
+      this.error = 'Profile not found. Please contact HR.';
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+
+    forkJoin({
+      emp: this.empService.getById(this.empId).pipe(
+        catchError(() => of(null))
+      ),
+      assign: this.assignService.getByEmpId(this.empId).pipe(
+        catchError(() => of(null))
+      )
+    }).subscribe({
+      next: ({ emp, assign }) => {
+        this.emp = emp?.data ?? null;
+        this.assign = assign?.data ?? null;
+
+        if (!this.emp) {
+          this.error = 'Profile not found. Please contact HR.';
         }
+
+        this.loading = false;
       },
       error: () => {
-        this.error   = 'Could not load profile. Please try again.';
+        this.error = 'Could not load profile. Please try again.';
         this.loading = false;
       }
     });

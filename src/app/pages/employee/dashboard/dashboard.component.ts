@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { SalaryService, SalaryResponse } from '../../../core/services/salary.service';
-import { EmployeeService, Employee } from '../../../core/services/employee.service';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
@@ -26,8 +25,7 @@ export class EmployeeDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private salaryService: SalaryService,
-    private empService: EmployeeService
+    private salaryService: SalaryService
   ) {
     this.name  = authService.getName()  ?? 'Employee';
     this.email = authService.getEmail() ?? '';
@@ -39,33 +37,18 @@ export class EmployeeDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-  this.empService.getAll().subscribe({
-    next: (res) => {
-      const all: Employee[] = res.data ?? (res as any);
-      const found =
-        all.find(e => e.email?.toLowerCase() === this.email?.toLowerCase()) ??
-        all.find(e => e.empId === this.empId);
-
-      if (found) {
-        this.empId = found.empId;
-        this.loadSalary(); // ← owns loading = false
-      } else {
-        this.loading = false;
-        this.error = 'Could not load employee data.';
-      }
-    },
-    error: () => {
-      if (this.empId) {
-        this.loadSalary();
-      } else {
-        this.loading = false;
-        this.error = 'Could not load employee data.';
-      }
+    if (!this.empId) {
+      this.loading = false;
+      this.error = 'Could not load employee data.';
+      return;
     }
-  });
-}
+
+    this.loadSalary();
+  }
 
   loadSalary() {
+    this.loading = true;
+    this.error = '';
     this.salaryService.getSalary(this.empId, this.currentMonth, this.currentYear).subscribe({
       next: r  => { this.salary = r; this.loading = false; },
       error: () => { this.loading = false; }  // no salary yet — not an error

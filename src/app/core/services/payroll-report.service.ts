@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ReportRow {
@@ -43,10 +43,35 @@ export interface ReportRequest {
 @Injectable({ providedIn: 'root' })
 export class PayrollReportService {
   private baseUrl = `${environment.apiUrl}/payroll/reports`;
+  private summaryCache = new Map<string, Observable<ReportResponse>>();
 
   constructor(private http: HttpClient) {}
 
-  getSummary(body: ReportRequest): Observable<ReportResponse> {
-    return this.http.post<ReportResponse>(`${this.baseUrl}/summary`, body);
+  getSummary(body: ReportRequest, forceRefresh = false): Observable<ReportResponse> {
+    const cacheKey = JSON.stringify(body);
+
+    if (forceRefresh) {
+      this.summaryCache.delete(cacheKey);
+    }
+
+    const cached = this.summaryCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const request$ = this.http.post<ReportResponse>(`${this.baseUrl}/summary`, body).pipe(
+      catchError((err) => {
+        this.summaryCache.delete(cacheKey);
+        return throwError(() => err);
+      }),
+      shareReplay(1)
+    );
+
+    this.summaryCache.set(cacheKey, request$);
+    return request$;
+  }
+
+  clearCache(): void {
+    this.summaryCache.clear();
   }
 }

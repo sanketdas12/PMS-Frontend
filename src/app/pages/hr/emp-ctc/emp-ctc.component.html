@@ -1,0 +1,135 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Employee CTC Management</h1>
+      <p class="page-sub">Add or update Cost To Company for employees</p>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="spinner-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading employees and CTC data...</p>
+  </div>
+
+  <!-- Main content -->
+  <div *ngIf="!isLoading" class="content-wrapper">
+    <!-- Form Section -->
+    <div class="card form-card">
+      <h2 class="section-title">Add/Update CTC</h2>
+
+      <!-- Error Message -->
+      <div class="alert alert-error" *ngIf="errorMsg">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 10v1"/>
+        </svg>
+        {{ errorMsg }}
+      </div>
+
+      <!-- Success Message -->
+      <div class="alert alert-success" *ngIf="successMsg">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <path d="M2 8l3 3 7-7"/>
+        </svg>
+        {{ successMsg }}
+      </div>
+
+      <!-- Form Grid -->
+      <div class="form-section">
+        <!-- Employee Dropdown -->
+        <div class="form-group">
+          <label for="employee">Select Employee *</label>
+          <select
+            id="employee"
+            [(ngModel)]="selectedEmployeeId"
+            (ngModelChange)="selectEmployee($event)"
+            [disabled]="isSubmitting || employees.length === 0"
+          >
+            <option value="" disabled>{{ employees.length === 0 ? 'No employees found' : 'Select an employee...' }}</option>
+            <option *ngFor="let emp of employees" [value]="emp.empId">
+              {{ getEmployeeName(emp) }}
+            </option>
+          </select>
+        </div>
+
+        <!-- CTC Amount -->
+        <div class="form-group">
+          <label for="ctc">CTC Amount (₹) *</label>
+          <div class="ctc-input-wrapper">
+            <span class="currency-symbol">₹</span>
+            <input
+              id="ctc"
+              type="number"
+              [(ngModel)]="ctcAmount"
+              placeholder="Enter amount"
+              min="0"
+              step="1000"
+              [disabled]="!selectedEmployeeId || isSubmitting"
+            />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button
+            class="btn-primary"
+            [class.btn-update]="isExistingCTC"
+            (click)="submitCtc()"
+            [disabled]="!selectedEmployeeId || !ctcAmount || isSubmitting"
+          >
+            <svg *ngIf="!isSubmitting" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path *ngIf="!isExistingCTC" d="M7 10l2 2 4-4"/>
+              <path *ngIf="isExistingCTC" d="M4 6v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6"/>
+            </svg>
+            <span *ngIf="!isSubmitting">{{ isExistingCTC ? 'Update CTC' : 'Add CTC' }}</span>
+            <span *ngIf="isSubmitting">
+              <span class="spinner-small"></span>
+              Processing...
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTC List Section -->
+    <div class="card list-card" *ngIf="employeeCtcs.length > 0">
+      <div class="card-header">
+        <span class="card-title">CTC Records</span>
+        <span class="badge">{{ employeeCtcs.length }}</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Email</th>
+              <th>CTC Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ctc of employeeCtcs">
+              <td class="emp-id">{{ ctc.empId.slice(0, 8) }}...</td>
+              <td class="fw500">{{ ctc.employeeName }}</td>
+              <td class="email">{{ getEmailForEmpId(ctc.empId) }}</td>
+              <td class="amount">{{ formatCurrency(ctc.ctc) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="employeeCtcs.length === 0 && !isLoading">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12h6M9 16h6M9 8h6"/>
+          <path d="M4 20h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z"/>
+        </svg>
+      </div>
+      <p class="empty-text">No CTC records found</p>
+      <p class="empty-sub">Add CTC for employees using the form above</p>
+    </div>
+  </div>
+</div>
